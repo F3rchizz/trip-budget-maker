@@ -61,7 +61,7 @@ const Viajes = () => {
                     </div>
                   </div>
 
-                  <Button className="w-full rounded-xl font-semibold" size="lg">
+                  <Button className="w-full rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600">
                     Registrar Gasto
                   </Button>
                 </div>
@@ -73,7 +73,10 @@ const Viajes = () => {
         {trips.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground mb-4">No tienes viajes planeados</p>
-            <Button onClick={() => navigate("/")}>Crear primer viaje</Button>
+            <Button 
+             onClick={() => navigate("/")}
+             className="w-full max-w-xs rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
+            >Crear primer viaje</Button>
           </div>
         )}
       </div>

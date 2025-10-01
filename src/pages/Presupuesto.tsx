@@ -42,7 +42,7 @@ const Presupuesto = () => {
 
         <div className="mb-6">
           <Select defaultValue={currentTrip.id}>
-            <SelectTrigger className="rounded-xl">
+            <SelectTrigger className="rounded-lg">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

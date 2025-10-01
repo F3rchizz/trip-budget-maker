@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Plane, Receipt, PiggyBank, Plus, Bell } from "lucide-react";
+import { Home, Plane, Receipt, Calculator, Book, Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import RegisterExpenseModal from "./RegisterExpenseModal";
 
@@ -46,10 +46,10 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-        <div className="max-w-md mx-auto flex items-center justify-around py-2">
+        <div className="max-w-md mx-auto flex items-center justify-between py-2">
           <Link
             to="/"
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex flex-col items-center gap-1 w-1/5 px-4 rounded-lg transition-colors ${
               isActive("/") ? "text-primary" : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -59,7 +59,7 @@ const Layout = ({ children }: LayoutProps) => {
 
           <Link
             to="/viajes"
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex flex-col items-center gap-1 w-1/5 px-4 rounded-lg transition-colors ${
               isActive("/viajes") ? "text-primary" : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -69,30 +69,30 @@ const Layout = ({ children }: LayoutProps) => {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex flex-col items-center -mt-6"
+            className="flex flex-col items-center -mt-6 w-1/5"
           >
             <div className="bg-primary h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors">
-              <Plus className="h-7 w-7 text-primary-foreground" />
+              <Receipt className="h-7 w-7 text-primary-foreground" />
             </div>
           </button>
 
           <Link
             to="/movimientos"
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex flex-col items-center gap-1 w-1/5 px-4 rounded-lg transition-colors ${
               isActive("/movimientos") ? "text-primary" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Receipt className="h-5 w-5" />
+            <Book className="h-5 w-5" />
             <span className="text-xs font-medium">Movimientos</span>
           </Link>
 
           <Link
             to="/presupuesto"
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex flex-col items-center gap-1 w-1/5 px-4 rounded-lg transition-colors ${
               isActive("/presupuesto") ? "text-primary" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <PiggyBank className="h-5 w-5" />
+            <Calculator className="h-5 w-5" />
             <span className="text-xs font-medium">Presupuesto</span>
           </Link>
         </div>

@@ -95,13 +95,13 @@ const RegisterExpenseModal = ({ open, onOpenChange, tripId }: RegisterExpenseMod
             placeholder="Ej: Hospedaje johnny cay"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded-xl border-input h-12 text-base"
+            className="rounded-lg border-input h-12 text-base"
           />
 
           {/* Trip Selection - only show if no tripId provided */}
           {!tripId && trips.length > 0 && (
             <Select value={selectedTripId} onValueChange={setSelectedTripId}>
-              <SelectTrigger className="rounded-xl h-12">
+              <SelectTrigger className="rounded-lg h-12">
                 <SelectValue placeholder="Selecciona un viaje" />
               </SelectTrigger>
               <SelectContent>
@@ -117,7 +117,7 @@ const RegisterExpenseModal = ({ open, onOpenChange, tripId }: RegisterExpenseMod
           {/* Category Select */}
           <div className="relative">
             <Select value={category} onValueChange={(value) => setCategory(value as CategoryType)}>
-              <SelectTrigger className="rounded-xl h-12">
+              <SelectTrigger className="rounded-lg h-12">
                 <SelectValue placeholder="Selecciona categoría" />
               </SelectTrigger>
               <SelectContent>
@@ -144,11 +144,11 @@ const RegisterExpenseModal = ({ open, onOpenChange, tripId }: RegisterExpenseMod
                 placeholder="300.000"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="rounded-xl border-input h-12 text-base pl-8"
+                className="rounded-lg border-input h-12 text-base pl-8"
               />
             </div>
             <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger className="rounded-xl h-12 w-28">
+              <SelectTrigger className="rounded-lg h-12 w-28">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -162,7 +162,7 @@ const RegisterExpenseModal = ({ open, onOpenChange, tripId }: RegisterExpenseMod
           {/* Photo Button */}
           <Button
             variant="outline"
-            className="w-full rounded-xl h-12 text-base font-semibold"
+            className="w-full rounded-lg h-12 text-base font-semibold"
             type="button"
           >
             <Camera className="h-5 w-5" />
@@ -172,7 +172,7 @@ const RegisterExpenseModal = ({ open, onOpenChange, tripId }: RegisterExpenseMod
           {/* Submit Button */}
           <Button
             onClick={handleSubmit}
-            className="w-full rounded-xl h-12 text-base font-semibold"
+            className="w-full rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
           >
             Registrar
           </Button>

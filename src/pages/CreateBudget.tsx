@@ -117,10 +117,10 @@ const CreateBudget = () => {
               <button
                 key={category.id}
                 onClick={() => handleOpenDialog(category.id)}
-                className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-muted transition-colors"
+                className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted transition-colors"
               >
                 <div className="relative">
-                  <div className={`bg-secondary/10 p-3 rounded-xl text-secondary`}>
+                  <div className={`bg-secondary/10 p-3 rounded-lg text-secondary`}>
                     <CategoryIcon className="h-6 w-6" />
                   </div>
                   <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground rounded-full h-5 w-5 flex items-center justify-center text-xs font-bold">
@@ -138,7 +138,7 @@ const CreateBudget = () => {
 
         <Button
           onClick={() => navigate("/viajes")}
-          className="w-full rounded-xl font-semibold"
+          className="w-full rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
           size="lg"
           disabled={totalBudget === 0}
         >
@@ -156,7 +156,7 @@ const CreateBudget = () => {
               <Input
                 value={selectedCategory ? categories.find(c => c.id === selectedCategory)?.name : ""}
                 disabled
-                className="rounded-xl bg-muted"
+                className="rounded-lg bg-muted"
               />
             </div>
             <div className="space-y-2">
@@ -173,11 +173,11 @@ const CreateBudget = () => {
                       const value = e.target.value.replace(/[^0-9]/g, "");
                       setAmount(value);
                     }}
-                    className="rounded-xl pl-8 text-lg"
+                    className="rounded-lg pl-8 text-lg"
                   />
                 </div>
                 <Select value={currency} disabled>
-                  <SelectTrigger className="w-24 rounded-xl">
+                  <SelectTrigger className="w-24 rounded-lg">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -189,7 +189,7 @@ const CreateBudget = () => {
             </div>
             <Button
               onClick={handleAddBudget}
-              className="w-full rounded-xl font-semibold"
+              className="w-full rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
               size="lg"
             >
               Agregar

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin } from "lucide-react";
+import { TentTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ const Home = () => {
         {trips.length === 0 ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
             <div className="bg-muted rounded-2xl p-8 mb-6">
-              <MapPin className="h-16 w-16 text-secondary" />
+              <TentTree className="h-16 w-16 text-secondary" />
             </div>
             <h2 className="text-2xl font-bold mb-2 text-center">
               Tu próximo viaje
@@ -59,7 +59,7 @@ const Home = () => {
             <Button
               onClick={() => setOpenDialog(true)}
               size="lg"
-              className="w-full max-w-xs rounded-xl font-semibold"
+              className="w-full max-w-xs rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
             >
               Planear viaje
             </Button>
@@ -95,7 +95,7 @@ const Home = () => {
                 placeholder="Viaje a San Andrés"
                 value={tripName}
                 onChange={(e) => setTripName(e.target.value)}
-                className="rounded-xl"
+                className="rounded-lg"
               />
             </div>
             <div className="space-y-2">
@@ -103,7 +103,7 @@ const Home = () => {
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full justify-start text-left font-normal rounded-xl"
+                    className="w-full justify-start text-left font-normal rounded-lg"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {dateRange?.from && dateRange?.to ? (
@@ -125,7 +125,7 @@ const Home = () => {
             </div>
             <Button
               onClick={handleCreateTrip}
-              className="w-full rounded-xl font-semibold"
+              className="w-full max-w-xs rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
               size="lg"
             >
               Crear presupuesto

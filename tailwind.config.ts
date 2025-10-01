@@ -12,6 +12,9 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ['League Spartan', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -19,9 +22,21 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        black: "#040404",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          50: "#FEF1F7",
+          100: "#FEE5F0",
+          200: "#FFCAE3",
+          300: "#FF9FCA",
+          400: "#FF63A6",
+          500: "#FF3482",
+          600: "#F0125D",
+          700: "#D10544",
+          800: "#AD0738",
+          900: "#8F0C33",
+          950: "#580018"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

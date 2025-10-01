@@ -31,7 +31,7 @@ const Movimientos = () => {
 
         <div className="space-y-4 mb-6">
           <Select value={selectedTrip} onValueChange={setSelectedTrip}>
-            <SelectTrigger className="rounded-xl">
+            <SelectTrigger className="rounded-lg">
               <SelectValue placeholder="Viaje a San Andrés" />
             </SelectTrigger>
             <SelectContent>
@@ -45,7 +45,7 @@ const Movimientos = () => {
           </Select>
 
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="rounded-xl">
+            <SelectTrigger className="rounded-lg">
               <SelectValue placeholder="Todas las categorías" />
             </SelectTrigger>
             <SelectContent>
@@ -71,7 +71,7 @@ const Movimientos = () => {
                   key={movement.id}
                   className="w-full bg-card border border-border rounded-2xl p-4 flex items-center gap-4 hover:bg-muted transition-colors"
                 >
-                  <div className="bg-muted p-3 rounded-xl">
+                  <div className="bg-muted p-3 rounded-lg">
                     <CategoryIcon className="h-5 w-5 text-secondary" />
                   </div>
                   <div className="flex-1 text-left">
