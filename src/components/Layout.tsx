@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Plane, Receipt, PiggyBank, Calculator, Bell } from "lucide-react";
+import { Home, Plane, Receipt, PiggyBank, Plus, Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import RegisterExpenseModal from "./RegisterExpenseModal";
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,6 +10,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -65,14 +67,14 @@ const Layout = ({ children }: LayoutProps) => {
             <span className="text-xs font-medium">Viajes</span>
           </Link>
 
-          <Link
-            to="/create-budget"
+          <button
+            onClick={() => setIsModalOpen(true)}
             className="flex flex-col items-center -mt-6"
           >
-            <div className="bg-primary h-14 w-14 rounded-full flex items-center justify-center shadow-lg">
-              <Calculator className="h-6 w-6 text-primary-foreground" />
+            <div className="bg-primary h-14 w-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors">
+              <Plus className="h-7 w-7 text-primary-foreground" />
             </div>
-          </Link>
+          </button>
 
           <Link
             to="/movimientos"
@@ -95,6 +97,8 @@ const Layout = ({ children }: LayoutProps) => {
           </Link>
         </div>
       </nav>
+
+      <RegisterExpenseModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 };
