@@ -87,6 +87,12 @@ const Home = () => {
       if (movementsData) {
         setRecentMovements(movementsData);
       }
+    } else {
+      // No hay viajes, limpiar el estado
+      setCurrentTrip(null);
+      setCategoryData([]);
+      setRecentMovements([]);
+      setTotalSpent(0);
     }
   };
 
