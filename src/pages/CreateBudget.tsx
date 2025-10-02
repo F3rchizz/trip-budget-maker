@@ -1,140 +1,73 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Plane, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTrips } from "@/contexts/TripContext";
 import { categories, formatCurrency } from "@/utils/categories";
 import { CategoryType } from "@/types";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 const CreateBudget = () => {
   const navigate = useNavigate();
+  const { trips, updateTrip } = useTrips();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [amount, setAmount] = useState("");
   const [currency] = useState("COP");
-  const [currentTrip, setCurrentTrip] = useState<any>(null);
-  const [categoryBudgets, setCategoryBudgets] = useState<{ category: CategoryType; amount: number; id?: string }[]>([]);
 
-  useEffect(() => {
-    loadTripData();
-  }, []);
-
-  const loadTripData = async () => {
-    const { data: tripsData } = await supabase
-      .from("trips")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (tripsData) {
-      setCurrentTrip(tripsData);
-
-      const { data: categoriesData } = await supabase
-        .from("budget_categories")
-        .select("*")
-        .eq("trip_id", tripsData.id);
-
-      if (categoriesData) {
-        setCategoryBudgets(
-          categoriesData.map((cat) => ({
-            category: cat.category as CategoryType,
-            amount: Number(cat.amount),
-            id: cat.id,
-          }))
-        );
-      }
-    }
-  };
+  // Get the latest trip (for demo purposes)
+  const currentTrip = trips[trips.length - 1];
 
   if (!currentTrip) {
     return null;
   }
 
-  const totalBudget = categoryBudgets.reduce((sum, cat) => sum + cat.amount, 0);
+  const totalBudget = currentTrip.categories.reduce((sum, cat) => sum + cat.amount, 0);
 
-  const handleAddBudget = async () => {
+  const handleAddBudget = () => {
     if (selectedCategory && amount) {
       const numAmount = parseFloat(amount.replace(/[^0-9.]/g, ""));
-      const existing = categoryBudgets.find((cat) => cat.category === selectedCategory);
+      const updatedCategories = [...currentTrip.categories];
+      const existingIndex = updatedCategories.findIndex(
+        (cat) => cat.category === selectedCategory
+      );
 
-      if (existing?.id) {
-        // Update existing category
-        const { error } = await supabase
-          .from("budget_categories")
-          .update({ amount: numAmount })
-          .eq("id", existing.id);
-
-        if (error) {
-          toast.error("Error al actualizar la categoría");
-          return;
-        }
+      if (existingIndex >= 0) {
+        updatedCategories[existingIndex].amount = numAmount;
       } else {
-        // Insert new category
-        const { error } = await supabase
-          .from("budget_categories")
-          .insert({
-            trip_id: currentTrip.id,
-            category: selectedCategory,
-            amount: numAmount,
-          });
-
-        if (error) {
-          toast.error("Error al agregar la categoría");
-          return;
-        }
+        updatedCategories.push({
+          category: selectedCategory,
+          amount: numAmount,
+        });
       }
 
-      // Reload data
-      await loadTripData();
+      updateTrip(currentTrip.id, {
+        categories: updatedCategories,
+        totalBudget: updatedCategories.reduce((sum, cat) => sum + cat.amount, 0),
+      });
 
       setOpenDialog(false);
       setSelectedCategory(null);
       setAmount("");
-      toast.success("Presupuesto actualizado");
     }
   };
 
   const handleOpenDialog = (category: CategoryType) => {
     setSelectedCategory(category);
-    const existing = categoryBudgets.find((cat) => cat.category === category);
+    const existing = currentTrip.categories.find((cat) => cat.category === category);
     if (existing) {
       setAmount(existing.amount.toString());
-    } else {
-      setAmount("");
     }
     setOpenDialog(true);
   };
 
   const getCategoryAmount = (categoryId: CategoryType) => {
-    const cat = categoryBudgets.find((c) => c.category === categoryId);
+    const cat = currentTrip.categories.find((c) => c.category === categoryId);
     return cat ? cat.amount : 0;
-  };
-
-  const handleConfirmBudget = async () => {
-    if (totalBudget === 0) {
-      toast.error("Debes agregar al menos una categoría");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("trips")
-      .update({ total_budget: totalBudget })
-      .eq("id", currentTrip.id);
-
-    if (error) {
-      toast.error("Error al confirmar el presupuesto");
-      return;
-    }
-
-    toast.success("Presupuesto confirmado");
-    navigate("/");
   };
 
   return (
@@ -204,8 +137,8 @@ const CreateBudget = () => {
         </div>
 
         <Button
-          onClick={handleConfirmBudget}
-          className="w-full rounded-lg font-semibold text-lg"
+          onClick={() => navigate("/viajes")}
+          className="w-full rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
           size="lg"
           disabled={totalBudget === 0}
         >
