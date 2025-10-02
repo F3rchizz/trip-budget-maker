@@ -215,7 +215,7 @@ const Home = () => {
               </div>
 
               <div className="space-y-3">
-                {categoryData.slice(0, 2).map((cat) => {
+                {(recentMovements.length > 0 ? categoryData.slice(0, 2) : categoryData).map((cat) => {
                   const categoryInfo = categories.find((c) => c.id === cat.category);
                   const Icon = categoryInfo?.icon;
                   const percentage = cat.amount > 0 ? Math.round((cat.spent / cat.amount) * 100) : 0;
