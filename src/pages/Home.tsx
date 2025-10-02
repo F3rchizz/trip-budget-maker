@@ -136,24 +136,28 @@ const Home = () => {
       <div className="p-6">
         {!currentTrip ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="bg-muted rounded-2xl p-8 mb-6">
-              <TentTree className="h-16 w-16 text-secondary" />
+            <div className="bg-muted rounded-3xl p-12 max-w-sm w-full space-y-6">
+              <div className="flex justify-center">
+                <div className="w-20 h-20 rounded-full bg-background flex items-center justify-center">
+                  <TentTree className="h-10 w-10 text-secondary" />
+                </div>
+              </div>
+              <h2 className="text-xl font-bold text-center text-secondary leading-tight">
+                Tu próximo viaje
+                <br />
+                empieza con un buen plan
+              </h2>
+              <p className="text-muted-foreground text-center">
+                Arma tu presupuesto en minutos
+              </p>
+              <Button
+                onClick={() => setOpenDialog(true)}
+                size="lg"
+                className="w-full rounded-xl font-bold text-base"
+              >
+                Planear viaje
+              </Button>
             </div>
-            <h2 className="text-2xl font-bold mb-2 text-center">
-              Tu próximo viaje
-              <br />
-              empieza con un buen plan
-            </h2>
-            <p className="text-muted-foreground mb-8 text-center">
-              Arma tu presupuesto en minutos
-            </p>
-            <Button
-              onClick={() => setOpenDialog(true)}
-              size="lg"
-              className="w-full max-w-xs rounded-lg font-semibold text-lg text-black bg-primary-500 hover:bg-primary-600"
-            >
-              Planear viaje
-            </Button>
           </div>
         ) : (
           <div className="space-y-6">
