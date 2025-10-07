@@ -52,6 +52,14 @@ All colors MUST be HSL.
     /* Status colors */
     --status-pendiente: 35 91% 62%;
     --status-completado: 142 71% 45%;
+
+    /* Progress bar colors by range */
+    --progress-low-spent: 142 71% 40%;
+    --progress-low-remaining: 142 71% 80%;
+    --progress-medium-spent: 35 91% 50%;
+    --progress-medium-remaining: 45 98% 76%;
+    --progress-high-spent: 4 87% 58%;
+    --progress-high-remaining: 4 87% 88%;
   }
 
   .dark {

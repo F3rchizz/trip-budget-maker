@@ -176,6 +176,11 @@ const Home = () => {
                   const spent = spentByCategory[budgetCat.category] || 0;
                   const percentage = budgetCat.amount > 0 ? (spent / budgetCat.amount) * 100 : 0;
                   const Icon = categoryInfo?.icon;
+                  
+                  const progressVariant = 
+                    percentage >= 90 ? "high" :
+                    percentage >= 60 ? "medium" :
+                    "low";
 
                   return (
                     <div
@@ -209,7 +214,7 @@ const Home = () => {
                             {formatCurrency(spent)} {formatCurrency(budgetCat.amount)}
                           </span>
                         </div>
-                        <Progress value={Math.min(100, percentage)} />
+                        <Progress value={Math.min(100, percentage)} variant={progressVariant} />
                       </div>
                     </div>
                   );
