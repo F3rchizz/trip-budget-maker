@@ -1,25 +1,70 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { TentTree } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { Progress } from "@/components/ui/progress";
+import { format, differenceInDays } from "date-fns";
 import { es } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useTrips } from "@/contexts/TripContext";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { DateRange } from "react-day-picker";
+import { categories, formatCurrency } from "@/utils/categories";
+import { CategoryType } from "@/types";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [tripName, setTripName] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const { trips, addTrip } = useTrips();
+  const { trips, addTrip, movements } = useTrips();
   const navigate = useNavigate();
+
+  // Get the most recent trip (assuming it's the active one)
+  const activeTrip = trips.length > 0 ? trips[trips.length - 1] : null;
+
+  // Calculate current day of trip
+  const currentDay = useMemo(() => {
+    if (!activeTrip) return 0;
+    const startDate = new Date(activeTrip.startDate);
+    const today = new Date();
+    const daysDiff = differenceInDays(today, startDate) + 1;
+    return Math.max(1, daysDiff);
+  }, [activeTrip]);
+
+  // Calculate total days of trip
+  const totalDays = useMemo(() => {
+    if (!activeTrip) return 0;
+    const startDate = new Date(activeTrip.startDate);
+    const endDate = new Date(activeTrip.endDate);
+    return differenceInDays(endDate, startDate) + 1;
+  }, [activeTrip]);
+
+  // Calculate spent amounts
+  const totalSpent = useMemo(() => {
+    if (!activeTrip) return 0;
+    return movements
+      .filter((m) => m.tripId === activeTrip.id)
+      .reduce((sum, m) => sum + m.amount, 0);
+  }, [activeTrip, movements]);
+
+  const spentByCategory = useMemo(() => {
+    if (!activeTrip) return {};
+    const spent: Record<CategoryType, number> = {} as Record<CategoryType, number>;
+    movements
+      .filter((m) => m.tripId === activeTrip.id)
+      .forEach((m) => {
+        spent[m.category] = (spent[m.category] || 0) + m.amount;
+      });
+    return spent;
+  }, [activeTrip, movements]);
+
+  const spentPercentage = activeTrip
+    ? Math.min(100, (totalSpent / activeTrip.totalBudget) * 100)
+    : 0;
 
   const handleCreateTrip = () => {
     if (tripName && dateRange?.from && dateRange?.to) {
@@ -66,19 +111,110 @@ const Home = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Mis Viajes</h2>
-              <Button
-                onClick={() => setOpenDialog(true)}
-                variant="ghost"
-                className="text-primary font-semibold"
-              >
-                Planear viaje +
-              </Button>
+            {/* Trip Header */}
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-bold">{activeTrip?.name}</h1>
+              <p className="text-muted-foreground">
+                Día {currentDay} / {totalDays}
+              </p>
             </div>
-            {/* Trip list will be shown here */}
-            <div className="text-center text-muted-foreground mt-8">
-              Próximamente verás tus viajes aquí
+
+            {/* Circular Budget Progress */}
+            <div className="flex justify-center py-6">
+              <div className="relative w-48 h-48">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="88"
+                    stroke="hsl(var(--muted))"
+                    strokeWidth="12"
+                    fill="none"
+                  />
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="88"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="12"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 88}`}
+                    strokeDashoffset={`${2 * Math.PI * 88 * (1 - spentPercentage / 100)}`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <p className="text-sm text-primary font-semibold">
+                    {spentPercentage.toFixed(0)}%
+                  </p>
+                  <p className="text-3xl font-bold">
+                    {formatCurrency(totalSpent)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Presupuesto gastado
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Budget by Category */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold">Presupuesto por categoría</h2>
+                <Button
+                  variant="ghost"
+                  className="text-primary text-sm font-semibold"
+                  onClick={() => navigate("/presupuesto")}
+                >
+                  Ver todo
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {activeTrip?.categories.map((budgetCat) => {
+                  const categoryInfo = categories.find((c) => c.id === budgetCat.category);
+                  const spent = spentByCategory[budgetCat.category] || 0;
+                  const percentage = budgetCat.amount > 0 ? (spent / budgetCat.amount) * 100 : 0;
+                  const Icon = categoryInfo?.icon;
+
+                  return (
+                    <div
+                      key={budgetCat.category}
+                      className="bg-card border border-border rounded-2xl p-4 space-y-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {Icon && (
+                            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+                              <Icon className="w-5 h-5 text-secondary" />
+                            </div>
+                          )}
+                          <span className="font-semibold">{categoryInfo?.name}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          className="text-primary text-sm font-semibold"
+                          onClick={() => navigate("/presupuesto")}
+                        >
+                          Editar
+                        </Button>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            {percentage.toFixed(0)}% Gastado
+                          </span>
+                          <span className="font-semibold">
+                            {formatCurrency(spent)} {formatCurrency(budgetCat.amount)}
+                          </span>
+                        </div>
+                        <Progress value={Math.min(100, percentage)} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
